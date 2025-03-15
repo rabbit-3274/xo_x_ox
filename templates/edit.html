@@ -7,9 +7,21 @@
 </head>
 <body>
     <h2>短縮URL編集</h2>
-    <form method="POST">
+
+    <!-- エラーメッセージの表示 -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li style="color: red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="application/x-www-form-urlencoded">
         <label>短縮URL: </label>
-        <input type="text" value="{{ url.short_id }}" readonly><br>
+        <input type="text" value="{{ url.short_id }}" disabled><br>
 
         <label>元のURL: </label>
         <input type="text" name="original_url" value="{{ url.original_url }}" required><br>
