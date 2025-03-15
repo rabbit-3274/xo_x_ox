@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短縮URL管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow-md">
+        <h1 class="text-xl font-bold mb-4">短縮URL管理</h1>
+
+        <!-- URL短縮フォーム -->
+        <form method="POST" class="mb-4 flex gap-2">
+            <input type="text" name="original_url" placeholder="URLを入力" required
+                   class="border p-2 flex-1 rounded">
+            <input type="text" name="custom_id" placeholder="カスタムID (オプション)"
+                   class="border p-2 rounded">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">作成</button>
+        </form>
+
+        <!-- URL一覧 -->
+        <table class="w-full bg-white border border-gray-200 rounded">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-2">短縮URL</th>
+                    <th class="p-2">元URL</th>
+                    <th class="p-2">アクセス数</th>
+                    <th class="p-2">アクション</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for url in urls %}
+                <tr class="border-b">
+                    <td class="p-2">
+                        <input type="text" value="{{ request.host_url }}{{ url.short_id }}" readonly
+                               class="border-none bg-transparent text-blue-500 cursor-pointer"
+                               onclick="copyToClipboard(this)">
+                    </td>
+                    <td class="p-2 truncate">{{ url.original_url }}</td>
+                    <td class="p-2">{{ url.visits }}</td>
+                    <td class="p-2">
+                        <form action="/delete/{{ url.id }}" method="POST" class="inline">
+                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">削除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function copyToClipboard(element) {
+            navigator.clipboard.writeText(element.value);
+            alert("コピーしました: " + element.value);
+        }
+    </script>
+</body>
+</html>
